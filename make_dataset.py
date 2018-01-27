@@ -13,14 +13,36 @@ from keras.datasets import *
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
 def load_images(name: str, directories: set):
-    for directory in directories:
+    images = []
+    labels = []
+    names = {} # name -> activation vector index
+
+    for index, directory in enumerate(directories):
         image_files = os.listdir(name+"/"+directory)
+        names[directory] = index
         for file in image_files:
             print(file)
             image = misc.imread(name+"/"+directory+"/"+file)
-            print(type(image), image.shape, image.dtype)
-            plt.imshow(image)
-            plt.show()
+
+            # print(type(image), image.shape, image.dtype)
+            # plt.imshow(image)
+            # plt.show()
+
+            # resize
+            # store in array
+            images.append(image)
+            # add the label index
+            labels.append(index)
+
+
+        # show last image
+        print(type(image), image.shape, image.dtype)
+        plt.imshow(image)
+        plt.show()
+        print(image)
+
+    print(names)
+
 
 
 
