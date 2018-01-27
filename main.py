@@ -1,6 +1,7 @@
 from keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D
 from keras.models import Model
 from keras.optimizers import Adam
+from keras.datasets import cifar10
 
 input_img = Input(shape=(128, 64, 3))  # adapt this if using `channels_first` image data format
 
@@ -29,3 +30,11 @@ opt = Adam()
 
 
 autoencoder.compile(optimizer=opt, loss='binary_crossentropy')
+
+
+# set up the data
+(x_train, _), (x_test, _) = cifar10.load_data()
+x_train = x_train.astype('float32')/255. # Make sure that the data is between 0 and 1
+x_test = x_test.astype('float32')/255.
+
+print(x_train.shape)
