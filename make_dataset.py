@@ -8,9 +8,11 @@ import matplotlib.pyplot as plt
 import sys
 import os
 
-from keras.datasets import *
-
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+# from keras.datasets import *
+#
+# (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+# print(type(x_train), x_train.shape, x_train.dtype)
+# print(type(y_train), y_train.shape, y_train.dtype)
 
 def load_images(name: str, directories: set):
     images = []
@@ -23,10 +25,6 @@ def load_images(name: str, directories: set):
         for file in image_files:
             print(file)
             image = misc.imread(name+"/"+directory+"/"+file)
-
-            # print(type(image), image.shape, image.dtype)
-            # plt.imshow(image)
-            # plt.show()
 
             # resize
             # store in array
@@ -56,8 +54,6 @@ def main( argv):
     files = os.listdir(base)
 
     print(files)
-    print(type(x_train), x_train.shape, x_train.dtype)
-    print(type(y_train), y_train.shape, y_train.dtype)
 
     # make sure that test and train are in base directory
     if not( "test" in files and "train" in files):
