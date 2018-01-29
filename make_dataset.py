@@ -3,6 +3,7 @@
 """
 from scipy import ndimage
 from scipy import misc
+import numpy
 
 import matplotlib.pyplot as plt
 import sys
@@ -14,7 +15,7 @@ import os
 # print(type(x_train), x_train.shape, x_train.dtype)
 # print(type(y_train), y_train.shape, y_train.dtype)
 
-def load_images(name: str, directories: set):
+def load_images(name: str, directories: set, names=None):
     images = []
     labels = []
     names = {} # name -> activation vector index
@@ -39,7 +40,12 @@ def load_images(name: str, directories: set):
         plt.show()
         print(image)
 
+    images = numpy.asarray(images)
+    labels = numpy.asarray(labels)
+
+
     print(names)
+    return images, labels, names
 
 
 
@@ -72,7 +78,7 @@ def main( argv):
             raise UserWarning(directory + " not a training directory")
 
     print("Directories match, generating train files")
-    load_images(train_dir, train_dirs)
+    images, labels, names = load_images(train_dir, train_dirs)
 
 
 
