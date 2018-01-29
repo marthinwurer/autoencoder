@@ -2,3 +2,5 @@
 .python-version
 *.jpeg
 #*.png
+*.npy
+names.csv
