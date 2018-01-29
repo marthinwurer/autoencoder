@@ -21,7 +21,7 @@ TEST_DATA_FILE = "test_data.npy"
 TEST_LABEL_FILE = "test_labels.npy"
 NAMES_FILE = "names.csv"
 
-def load_dataset(path):
+def load_data(path):
     # load the arrays
     train_data = numpy.load(path+"/"+TRAIN_DATA_FILE)
     train_labels = numpy.load(path+"/"+TRAIN_LABEL_FILE)
@@ -59,6 +59,16 @@ def load_dataset(path):
 
 
 def load_images(name: str, directories: set, names=None):
+    """Load all the png images, remove the alpha channel, and join them all into numpy arrays
+
+    Args:
+        name:
+        directories:
+        names:
+
+    Returns:
+
+    """
     images = []
     labels = []
     names = {} # name -> activation vector index
@@ -70,6 +80,8 @@ def load_images(name: str, directories: set, names=None):
             print(file)
             image = misc.imread(name+"/"+directory+"/"+file)
 
+            # remove the alpha channel
+            image = numpy.delete(image, [3], axis=2)
             # resize
             # store in array
             images.append(image)
@@ -147,7 +159,7 @@ def main( argv):
     print(labels)
 
 
-    (train_images, train_labels), (test_images, test_labels) = load_dataset(".")
+    (train_images, train_labels), (test_images, test_labels) = load_data(".")
     print(test_labels[0])
 
     plt.imshow(test_images[0])
