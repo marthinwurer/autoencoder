@@ -40,6 +40,19 @@ def load_dataset(path):
     print(names)
 
     # expand the labels into one-hot vectors
+    test_label_vectors = []
+    train_label_vectors = []
+    width = len(names)
+    for label in test_labels:
+        vec = numpy.zeros(width)
+        vec[label] = 1
+        test_label_vectors.append(vec)
+    for label in train_labels:
+        vec = numpy.zeros(width)
+        vec[label] = 1
+        train_label_vectors.append(vec)
+    test_labels = numpy.asarray(test_label_vectors)
+    train_labels = numpy.asarray(train_label_vectors)
 
 
     return (train_data, train_labels), (test_data, test_labels)
@@ -71,7 +84,7 @@ def load_images(name: str, directories: set, names=None):
         # print(image)
 
     images = numpy.asarray(images)
-    labels = numpy.asarray(labels)
+    labels = numpy.asarray(labels, numpy.uint8)
 
 
     print(names)
@@ -130,12 +143,16 @@ def main( argv):
 
     plt.imshow(images[0])
     plt.show()
+    print(labels[0])
+    print(labels)
 
 
     (train_images, train_labels), (test_images, test_labels) = load_dataset(".")
+    print(test_labels[0])
 
     plt.imshow(test_images[0])
     plt.show()
+
 
 
 
