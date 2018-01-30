@@ -27,12 +27,12 @@ decoded = Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
 autoencoder = Model(input_img, decoded)
 autoencoder.summary()
 
-# opt = Adam()
-opt = SGD(lr=0.01, clipvalue=0.5)
+opt = Adam()
+# opt = SGD(lr=0.01, clipvalue=0.5)
 
 
 
-autoencoder.compile(optimizer=opt, loss='binary_crossentropy')
+autoencoder.compile(optimizer=opt, loss='mean_squared_error')
 
 
 # set up the data
@@ -44,11 +44,13 @@ print(x_train.shape)
 
 
 autoencoder.fit(x_train, x_train,
-                epochs=500,
+                epochs=200,
                 batch_size=4,
                 shuffle=True,
                 validation_data=(x_test, x_test))
 
+
+autoencoder.save("autoencoder.h5")
 
 
 import matplotlib.pyplot as plt

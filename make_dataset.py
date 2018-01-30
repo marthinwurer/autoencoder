@@ -8,6 +8,9 @@ import numpy
 import matplotlib.pyplot as plt
 import sys
 import os
+import argparse
+
+from skimage.transform import resize
 
 # from keras.datasets import *
 #
@@ -57,8 +60,18 @@ def load_data(path):
 
     return (train_data, train_labels), (test_data, test_labels)
 
+def load_image(path:str, size: tuple=None):
+    image = misc.imread(path)
 
-def load_images(name: str, directories: set, names=None):
+    # remove the alpha channel
+    image = numpy.delete(image, [3], axis=2)
+    # resize
+    if size is not None:
+        image = resize(image, size, preserve_range=True)#, anti_aliasing=True)
+    return image
+
+
+def load_images(name: str, directories: set, names: dict=None, size: tuple=None):
     """Load all the png images, remove the alpha channel, and join them all into numpy arrays
 
     Args:
@@ -71,18 +84,17 @@ def load_images(name: str, directories: set, names=None):
     """
     images = []
     labels = []
-    names = {} # name -> activation vector index
+    if names is None:
+        names = {} # name -> activation vector index
 
     for index, directory in enumerate(directories):
         image_files = os.listdir(name+"/"+directory)
-        names[directory] = index
+        if not directory in names:
+            names[directory] = index
         for file in image_files:
             print(file)
-            image = misc.imread(name+"/"+directory+"/"+file)
+            image = load_image(name+"/"+directory+"/"+file, size=size)
 
-            # remove the alpha channel
-            image = numpy.delete(image, [3], axis=2)
-            # resize
             # store in array
             images.append(image)
             # add the label index
@@ -106,6 +118,11 @@ def load_images(name: str, directories: set, names=None):
 
 
 def main( argv):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("base", help="base directory where dataset data is found")
+    parser.add_argument("--height", type=int)
+    parser.add_argument("--width", type=int)
+
 
     # get the base directory from the first arg
     base = argv[1]
@@ -133,7 +150,7 @@ def main( argv):
             raise UserWarning(directory + " not a training directory")
 
     print("Directories match, generating train files")
-    images, labels, names = load_images(train_dir, train_dirs)
+    images, labels, names = load_images(train_dir, train_dirs)#, size=(64, 128))
 
     print(type(images), images.shape, images.dtype)
 
