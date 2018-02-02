@@ -3,8 +3,6 @@ import make_dataset
 
 parser = argparse.ArgumentParser()
 parser.add_argument("base", help="base directory where dataset data is found")
-# parser.add_argument("--height", type=int)
-# parser.add_argument("--width", type=int)
 args = parser.parse_args()
 base = args.base + "/"
 
@@ -24,7 +22,7 @@ from keras.optimizers import Adam, SGD
 
 input_img = Input(shape=x_test.shape[1:])
 
-dropout_value = 0.2
+dropout_value = 0.5
 
 # initial layer
 x = Conv2D(16, 3, activation='relu', padding='same')(input_img)
