@@ -33,7 +33,7 @@ def load_data(path):
 
     # load the names file
     names = {}
-    with open(NAMES_FILE) as f:
+    with open(path+"/"+NAMES_FILE) as f:
         for line in f:
             line = line.split(",")
             names[line[0].strip()] = int(line[1].strip())
@@ -63,8 +63,16 @@ def load_data(path):
 def load_image(path:str, size: tuple=None):
     image = misc.imread(path)
 
-    # remove the alpha channel
-    image = numpy.delete(image, [3], axis=2)
+    if len(image.shape) == 2:
+        # only one channel, reshape to have a single dimensional channel
+        # image = numpy.reshape(image, image.shape + (1,))
+        # stack it thrice
+        image = numpy.stack((image,)*3, axis=-1)
+        print(image.shape)
+    # if there are more than 3 channels, remove the alpha channel
+    elif image.shape[2] > 3:
+        # remove the alpha channel
+        image = numpy.delete(image, [3], axis=2)
     # resize
     if size is not None:
         image = resize(image, size, preserve_range=True)#, anti_aliasing=True)
@@ -92,7 +100,7 @@ def load_images(name: str, directories: set, names: dict=None, size: tuple=None)
         if not directory in names:
             names[directory] = index
         for file in image_files:
-            print(file)
+            # print(file)
             image = load_image(name+"/"+directory+"/"+file, size=size)
 
             # store in array
@@ -123,9 +131,10 @@ def main( argv):
     parser.add_argument("--height", type=int)
     parser.add_argument("--width", type=int)
 
+    args = parser.parse_args()
 
     # get the base directory from the first arg
-    base = argv[1]
+    base = args.base
     test_dir = base+"/test/"
     train_dir = base+"/train/"
 
@@ -176,7 +185,7 @@ def main( argv):
     print(labels)
 
 
-    (train_images, train_labels), (test_images, test_labels) = load_data(".")
+    (train_images, train_labels), (test_images, test_labels) = load_data(base)
     print(test_labels[0])
 
     plt.imshow(test_images[0])
