@@ -1,7 +1,6 @@
 """
 
 """
-from scipy import ndimage
 from scipy import misc
 import numpy
 
@@ -17,6 +16,7 @@ from skimage.transform import resize
 # (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 # print(type(x_train), x_train.shape, x_train.dtype)
 # print(type(y_train), y_train.shape, y_train.dtype)
+from tqdm import tqdm
 
 TRAIN_DATA_FILE = "train_data.npy"
 TRAIN_LABEL_FILE = "train_labels.npy"
@@ -99,8 +99,7 @@ def load_images(name: str, directories: set, names: dict=None, size: tuple=None)
         image_files = os.listdir(name+"/"+directory)
         if not directory in names:
             names[directory] = index
-        for file in image_files:
-            # print(file)
+        for file in tqdm(image_files):
             image = load_image(name+"/"+directory+"/"+file, size=size)
 
             # store in array
@@ -130,6 +129,12 @@ def main( argv):
     parser.add_argument("base", help="base directory where dataset data is found")
     parser.add_argument("--height", type=int)
     parser.add_argument("--width", type=int)
+    args = parser.parse_args()
+
+    size = None
+    if args.height and args.width:
+        size = (args.height, args.width)
+
 
     args = parser.parse_args()
 
@@ -159,7 +164,7 @@ def main( argv):
             raise UserWarning(directory + " not a training directory")
 
     print("Directories match, generating train files")
-    images, labels, names = load_images(train_dir, train_dirs)#, size=(64, 128))
+    images, labels, names = load_images(train_dir, train_dirs, size=size)#, size=(64, 128))
 
     print(type(images), images.shape, images.dtype)
 
@@ -168,7 +173,7 @@ def main( argv):
     numpy.save("train_labels.npy", labels)
 
     # then do the test files
-    images, labels, names = load_images(test_dir, train_dirs)
+    images, labels, names = load_images(test_dir, train_dirs, size=size)
     print(type(images), images.shape, images.dtype)
 
     numpy.save("test_data.npy", images)

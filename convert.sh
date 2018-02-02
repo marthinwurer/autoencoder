@@ -5,6 +5,10 @@ OUT_DIR=$2
 
 # la
 
+
+# ffmpeg -i ../4K\ Video\ Downloader/2017\ Men’s\ Foil\ Individual\ Grand\ Prix\ Turin\ -\ Piste\ Blue.mp4 -r 1 image-%5d.png
+
+
 CUR_NUM=`ls $OUT_DIR | sed -e 's/[^1-9]*\([0-9]*\)[^0-9]*/\1/' | sort -n | tail -1`
 echo $CUR_NUM
 CUR_NUM=$[$CUR_NUM + 1]
