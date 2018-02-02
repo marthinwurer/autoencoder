@@ -25,15 +25,16 @@ TEST_LABEL_FILE = "test_labels.npy"
 NAMES_FILE = "names.csv"
 
 def load_data(path):
+    path += "/"
     # load the arrays
-    train_data = numpy.load(path+"/"+TRAIN_DATA_FILE)
-    train_labels = numpy.load(path+"/"+TRAIN_LABEL_FILE)
-    test_data = numpy.load(path+"/"+TEST_DATA_FILE)
-    test_labels = numpy.load(path+"/"+TEST_LABEL_FILE)
+    train_data = numpy.load(path+TRAIN_DATA_FILE)
+    train_labels = numpy.load(path+TRAIN_LABEL_FILE)
+    test_data = numpy.load(path+TEST_DATA_FILE)
+    test_labels = numpy.load(path+TEST_LABEL_FILE)
 
     # load the names file
     names = {}
-    with open(path+"/"+NAMES_FILE) as f:
+    with open(path+NAMES_FILE) as f:
         for line in f:
             line = line.split(",")
             names[line[0].strip()] = int(line[1].strip())
@@ -139,7 +140,7 @@ def main( argv):
     args = parser.parse_args()
 
     # get the base directory from the first arg
-    base = args.base
+    base = args.base + "/"
     test_dir = base+"/test/"
     train_dir = base+"/train/"
 
@@ -169,18 +170,18 @@ def main( argv):
     print(type(images), images.shape, images.dtype)
 
     # save images
-    numpy.save("train_data.npy", images)
-    numpy.save("train_labels.npy", labels)
+    numpy.save(base + "train_data.npy", images)
+    numpy.save(base + "train_labels.npy", labels)
 
     # then do the test files
     images, labels, names = load_images(test_dir, train_dirs, size=size)
     print(type(images), images.shape, images.dtype)
 
-    numpy.save("test_data.npy", images)
-    numpy.save("test_labels.npy", labels)
+    numpy.save(base + "test_data.npy", images)
+    numpy.save(base + "test_labels.npy", labels)
 
     # dump the names file
-    with open(NAMES_FILE, "w") as f:
+    with open(base + NAMES_FILE, "w") as f:
         for k, v in names.items():
             f.write(k + ", " + str(v) + "\n")
 

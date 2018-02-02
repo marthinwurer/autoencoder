@@ -7,6 +7,7 @@ parser.add_argument("base", help="base directory where dataset data is found")
 # parser.add_argument("--height", type=int)
 # parser.add_argument("--width", type=int)
 args = parser.parse_args()
+base = args.base + "/"
 
 # set up the data
 (x_train, _), (x_test, _) = make_dataset.load_data(args.base)
@@ -65,13 +66,13 @@ autoencoder.compile(optimizer=opt, loss='binary_crossentropy')
 
 
 autoencoder.fit(x_train, x_train,
-                epochs=10,
+                epochs=100,
                 batch_size=32,
                 shuffle=True,
                 validation_data=(x_test, x_test))
 
 
-autoencoder.save("autoencoder.h5")
+autoencoder.save(base + "autoencoder.h5")
 
 
 import matplotlib.pyplot as plt
