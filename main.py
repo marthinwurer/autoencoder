@@ -69,7 +69,7 @@ autoencoder.compile(optimizer=opt, loss='binary_crossentropy')
 
 
 autoencoder.fit(x_train, x_train,
-                epochs=100,
+                epochs=1,
                 batch_size=32,
                 shuffle=True,
                 validation_data=(x_test, x_test))
