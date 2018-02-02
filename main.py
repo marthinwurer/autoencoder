@@ -1,5 +1,4 @@
 import argparse
-
 import make_dataset
 
 parser = argparse.ArgumentParser()
@@ -17,7 +16,8 @@ x_test = x_test.astype('float32')/255.
 print(x_train.shape)
 
 # set up the keras stuff
-from keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D, AveragePooling2D, Dropout, BatchNormalization
+from keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D, AveragePooling2D, Dropout, \
+    BatchNormalization, Conv2DTranspose
 from keras.models import Model
 from keras.optimizers import Adam, SGD
 from keras.datasets import cifar10
@@ -41,15 +41,18 @@ encoded = MaxPooling2D((2, 2), padding='same')(x)
 x = Conv2D(8, (3, 3), activation='relu', padding='same')(encoded)
 x = Dropout(0.1)(x)
 # x = BatchNormalization()(x)
-x = UpSampling2D((2, 2))(x)
+x = Conv2DTranspose(8, (3, 3), strides=2, activation='relu', padding='same')(x)
+# x = UpSampling2D((2, 2))(x)
 x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
 x = Dropout(0.1)(x)
 # x = BatchNormalization()(x)
-x = UpSampling2D((2, 2))(x)
+x = Conv2DTranspose(8, (3, 3), strides=2, activation='relu', padding='same')(x)
+# x = UpSampling2D((2, 2))(x)
 x = Conv2D(16, (3, 3), activation='relu', padding='same')(x)
 x = Dropout(0.1)(x)
 # x = BatchNormalization()(x)
-x = UpSampling2D((2, 2))(x)
+x = Conv2DTranspose(8, (3, 3), strides=2, activation='relu', padding='same')(x)
+# x = UpSampling2D((2, 2))(x)
 decoded = Conv2D(3, (3, 3), activation='sigmoid', padding='same')(x)
 
 autoencoder = Model(input_img, decoded)
