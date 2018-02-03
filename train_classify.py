@@ -59,11 +59,11 @@ opt = Adam()
 # opt = SGD(lr=0.01, momentum=.9, clipvalue=0.5)
 
 classifier.compile(optimizer=opt,
-                   metrics=['mae', 'acc'],
-                   loss='binary_crossentropy')
+                   metrics=['mse', 'categorical_accuracy'],
+                   loss='categorical_crossentropy')
 
 classifier.fit(x_train, y_train,
-                epochs=1,
+                epochs=100,
                 batch_size=32,
                 shuffle=True,
                 validation_data=(x_test, y_test))

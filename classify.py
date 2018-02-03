@@ -28,29 +28,35 @@ def main():
     print(model.input_shape)
 
 
-    out = model.predict(x_test)
-    print(out.shape)
+    test_out = model.predict(x_test)
+    train_out = model.predict(x_train)
+    print(test_out.shape)
 
     # build a confusion matrix
-    confusion = np.zeros((classes,classes))
+    confusion_test = np.zeros((classes,classes))
     missed = []
-    for index, out in enumerate(out):
+    for index, item in enumerate(test_out):
         current = np.argmax(y_test[index])
-        value = np.argmax(out)
-        confusion[current][value] += 1
+        value = np.argmax(item)
+        confusion_test[current][value] += 1
         if current != value:
             missed.append(index)
 
+    # train matrix
+    confusion_train = np.zeros((classes,classes))
+    for index, item in enumerate(train_out):
+        current = np.argmax(y_train[index])
+        value = np.argmax(item)
+        confusion_train[current][value] += 1
 
-    print("error",len(missed), len(out))
-
+    print("test error:",len(missed), len(test_out), "=", len(missed)/ len(test_out))
 
     # make a new plot, and get the figure from it.
     fig = plt.figure()
     axe = fig.add_subplot(1, 2, 1) # vertical, horizontal, index
-    axe.imshow(confusion)
+    axe.imshow(confusion_test)
     axe = fig.add_subplot(1, 2, 2)
-    axe.imshow(confusion)
+    axe.imshow(confusion_train)
 
     # show the plot
     plt.show()
